@@ -69,6 +69,10 @@ worker.onmessage = (e) => {
             settingsModal.classList.remove("open");
             activeDictLabel.textContent = uploadedDictName.textContent;
             activeScoreLabel.textContent = minScoreInput.value;
+
+            if (window.innerWidth <= 900) {
+                switchMobileTab("center-panel");
+            }
             break;
 
         case "AC3_SUCCESS":
@@ -396,6 +400,9 @@ function renderSlotsList() {
 
         item.addEventListener("click", () => {
             selectSlot(slot.id);
+            if (window.innerWidth <= 900) {
+                switchMobileTab("right-panel");
+            }
         });
 
         slotsList.appendChild(item);
@@ -843,6 +850,39 @@ function saveCurrentPuzzleProgress() {
         fills: getBoardFill()
     });
 }
+
+// Mobile navigation tabs functionality
+function switchMobileTab(tabId) {
+    const mainContainer = document.querySelector(".main-container");
+    const tabButtons = document.querySelectorAll(".mobile-tab-btn");
+    
+    tabButtons.forEach(btn => {
+        if (btn.getAttribute("data-tab") === tabId) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+
+    if (mainContainer) {
+        mainContainer.classList.remove("show-left", "show-center", "show-right");
+        if (tabId === "left-panel") {
+            mainContainer.classList.add("show-left");
+        } else if (tabId === "center-panel") {
+            mainContainer.classList.add("show-center");
+        } else if (tabId === "right-panel") {
+            mainContainer.classList.add("show-right");
+        }
+    }
+}
+
+// Attach listeners to mobile tab buttons
+document.querySelectorAll(".mobile-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const tabId = btn.getAttribute("data-tab");
+        switchMobileTab(tabId);
+    });
+});
 
 // Start
 run();
